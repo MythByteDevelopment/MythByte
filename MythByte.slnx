@@ -1,7 +1,9 @@
 <Solution>
   <Folder Name="/Solution Items/">
+    <File Path=".claude/skills/mythbyte/SKILL.md" />
     <File Path=".github/workflows/ci-build-test.yml" />
     <File Path=".github/workflows/close-subissues.yml" />
+    <File Path=".gitignore" />
     <File Path="MythByteDevelopment.md" />
     <File Path="README.md" />
   </Folder>
