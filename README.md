@@ -39,6 +39,19 @@ Local builds have version `0.0.0-dev` (`Directory.Build.props`); release builds 
 
 `.github/workflows/ci-build-test.yml` runs on every pull request to `main` (and on pushes to `main`): restore, build (Release, `--no-restore`) and test (`--no-build`) of `MythByte.slnx` on .NET 10. A failing build or test fails the check. `main` is protected so pull requests can only be merged when this check passes.
 
+## Releases
+
+Publishing a GitHub release with a tag like `v1.2.3` (or `v1.2.3-beta.1` as pre-release) runs `.github/workflows/release.yml`:
+
+1. Validates the tag and takes the version from it (`v1.2.3` becomes `1.2.3`).
+2. Restores, builds and tests the solution with that version. Failing tests stop the release.
+3. Builds and pushes the Docker images `ghcr.io/mythbytedevelopment/mythbyte-api` and `ghcr.io/mythbytedevelopment/mythbyte-gameserver` with the version tag, plus `latest` for non-pre-releases.
+4. Publishes the client self-contained for Windows (`MythByte-<version>-win-x64.zip`) and Linux (`MythByte-<version>-linux-x64.tar.gz`) with `.sha256` files and attaches them to the release.
+
+Version numbers are never edited by hand. `GET /api/system/version` returns the running API version and the client prints its version on start.
+
+To release: GitHub > Releases > Draft a new release, tag `vX.Y.Z` on `main`, Publish (or `gh release create vX.Y.Z --generate-notes`).
+
 ## Ports
 
 | Service | Port |

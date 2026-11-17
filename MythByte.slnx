@@ -15,9 +15,11 @@
   </Folder>
   <Folder Name="/Solution Items/">
     <File Path=".claude/skills/mythbyte/SKILL.md" />
+    <File Path=".dockerignore" />
     <File Path=".gitattributes" />
     <File Path=".github/workflows/ci-build-test.yml" />
     <File Path=".github/workflows/close-subissues.yml" />
+    <File Path=".github/workflows/release.yml" />
     <File Path=".gitignore" />
     <File Path="Directory.Build.props" />
     <File Path="FEATURES.md" />
