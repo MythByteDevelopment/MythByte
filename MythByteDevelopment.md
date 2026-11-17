@@ -69,14 +69,7 @@ These come from the original game idea and become the first seed data.
 
 **Starting species:**
 
-| Species | HP | Speed | Attack multiplier |
-|---|---:|---:|---:|
-| Pile of Shit (starter) | 69 | 110 | 0.8 |
-| Sir Gobby the Third | 70 | 130 | 0.6 |
-| Flying Meatball | 130 | 70 | 1.0 |
-| Tall Guy | 120 | 90 | 1.2 |
-| Raccoon | 150 | 110 | 2.1 |
-| El Donte | 200 | 150 | 1.5 |
+Six new starting species, each with HP, speed and attack multiplier, still to be designed in the sober medieval style. The critters from the old ESP32 prototype are not used.
 
 **Starting rules:**
 

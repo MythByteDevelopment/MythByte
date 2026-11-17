@@ -369,3 +369,6 @@ bootstrap/
 
 # graphify knowledge graph claude code extension output
 graphify-out/
+
+# GitHub wiki clone
+/wiki/
