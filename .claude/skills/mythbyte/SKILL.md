@@ -97,6 +97,7 @@ What lives where:
 - Rules are pure Application classes: plain inputs plus an injected random source, plain results, no EF. Unit-test them directly.
 - Battle actions: Fight (skill), Catch, Critter (info, later switch), Run. Catch and run resolve first, then the faster critter, then the slower one. A failed catch or run gives the opponent a free turn. HP and speed are clamped (speed minimum 1, heal never above max).
 - Starting skills: Attack (20 × attack multiplier), Block (takes 30% damage this turn), Heal (10% of max HP), Slow (−20 speed for the battle).
+- The critters from the old ESP32 prototype are never used; MythByte gets six new starting species (still to be designed).
 - Starting species and values (encounter chance 3% per step, grace 5 s, catch 30%, run 70%, team size 10, PvP turn timer) are seed data and `GameRulesOptions`, so balancing needs no code change. Formulas are documented in `BATTLE_README.md`.
 - A critter at 0 HP cannot be equipped until healed at a healing center.
 

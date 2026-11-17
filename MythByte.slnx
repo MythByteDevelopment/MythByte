@@ -1,10 +1,34 @@
 <Solution>
+  <Folder Name="/Backend/">
+    <Project Path="src/MythByte.API/MythByte.API.csproj" />
+    <Project Path="src/MythByte.Application/MythByte.Application.csproj" />
+    <Project Path="src/MythByte.Domain/MythByte.Domain.csproj" />
+    <Project Path="src/MythByte.Infrastructure/MythByte.Infrastructure.csproj" />
+    <Project Path="src/MythByte.Shared/MythByte.Shared.csproj" />
+  </Folder>
+  <Folder Name="/Client/">
+    <Project Path="src/MythByte.Client/MythByte.Client.csproj" />
+  </Folder>
+  <Folder Name="/Game/">
+    <Project Path="src/MythByte.GameServer/MythByte.GameServer.csproj" />
+    <Project Path="src/MythByte.Networking/MythByte.Networking.csproj" />
+  </Folder>
   <Folder Name="/Solution Items/">
     <File Path=".claude/skills/mythbyte/SKILL.md" />
+    <File Path=".gitattributes" />
     <File Path=".github/workflows/ci-build-test.yml" />
     <File Path=".github/workflows/close-subissues.yml" />
     <File Path=".gitignore" />
+    <File Path="Directory.Build.props" />
+    <File Path="FEATURES.md" />
     <File Path="MythByteDevelopment.md" />
     <File Path="README.md" />
+  </Folder>
+  <Folder Name="/Tests/">
+    <Project Path="tests/MythByte.IntegrationTests/MythByte.IntegrationTests.csproj" />
+    <Project Path="tests/MythByte.UnitTests/MythByte.UnitTests.csproj" />
+  </Folder>
+  <Folder Name="/Tools/">
+    <Project Path="tools/MythByte.BotClient/MythByte.BotClient.csproj" />
   </Folder>
 </Solution>

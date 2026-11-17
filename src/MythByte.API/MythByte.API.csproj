@@ -1,0 +1,9 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <ItemGroup>
+    <ProjectReference Include="..\MythByte.Application\MythByte.Application.csproj" />
+    <ProjectReference Include="..\MythByte.Infrastructure\MythByte.Infrastructure.csproj" />
+    <ProjectReference Include="..\MythByte.Shared\MythByte.Shared.csproj" />
+  </ItemGroup>
+
+</Project>
