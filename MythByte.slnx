@@ -1,0 +1,8 @@
+<Solution>
+  <Folder Name="/Solution Items/">
+    <File Path=".github/workflows/ci-build-test.yml" />
+    <File Path=".github/workflows/close-subissues.yml" />
+    <File Path="MythByteDevelopment.md" />
+    <File Path="README.md" />
+  </Folder>
+</Solution>
