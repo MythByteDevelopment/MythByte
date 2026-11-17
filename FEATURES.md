@@ -5,16 +5,17 @@
 - Strict project references per the dependency rules in `MythByteDevelopment.md`
 - `Dependencies` class with a `RegisterX()` entry point per project; short `Program.cs` checklists
 - Shared base types: `ApiResponse<T>`, `Roles`, `Permissions`, `FieldLimits`, `AppVersion`
-- xUnit + Moq test projects (9 tests)
+- xUnit + Moq test projects (10 tests)
 - `Directory.Build.props` with .NET 10, nullable, and version `0.0.0-dev` for local builds
 - CI: every pull request to `main` is restored, built and tested by GitHub Actions
+- Releases: publishing a GitHub release builds, tests and pushes the API and game server images to GHCR and attaches Windows and Linux client packages
+- `GET /api/system/version` and the client's version on start
 
 # To-do
 
 ## Bugs and fixes
 
 ## Foundation
-- [ ] Automatic releases from GitHub Releases (US03)
 
 ## Client
 - [ ] MonoGame client foundation (US04)
