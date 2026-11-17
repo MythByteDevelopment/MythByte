@@ -7,13 +7,13 @@
 - Shared base types: `ApiResponse<T>`, `Roles`, `Permissions`, `FieldLimits`, `AppVersion`
 - xUnit + Moq test projects (9 tests)
 - `Directory.Build.props` with .NET 10, nullable, and version `0.0.0-dev` for local builds
+- CI: every pull request to `main` is restored, built and tested by GitHub Actions
 
 # To-do
 
 ## Bugs and fixes
 
 ## Foundation
-- [ ] Build and test on every pull request (US02)
 - [ ] Automatic releases from GitHub Releases (US03)
 
 ## Client

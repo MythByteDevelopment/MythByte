@@ -35,6 +35,10 @@ dotnet run --project src/MythByte.GameServer
 
 Local builds have version `0.0.0-dev` (`Directory.Build.props`); release builds get their version from the Git tag.
 
+## Continuous integration
+
+`.github/workflows/ci-build-test.yml` runs on every pull request to `main` (and on pushes to `main`): restore, build (Release, `--no-restore`) and test (`--no-build`) of `MythByte.slnx` on .NET 10. A failing build or test fails the check. `main` is protected so pull requests can only be merged when this check passes.
+
 ## Ports
 
 | Service | Port |
