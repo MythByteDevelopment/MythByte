@@ -19,6 +19,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\MythByte.Application\MythByte.Application.csproj" />
+    <ProjectReference Include="..\..\src\MythByte.Client\MythByte.Client.csproj" />
     <ProjectReference Include="..\..\src\MythByte.Domain\MythByte.Domain.csproj" />
     <ProjectReference Include="..\..\src\MythByte.Shared\MythByte.Shared.csproj" />
   </ItemGroup>
