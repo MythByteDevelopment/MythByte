@@ -1,16 +1,15 @@
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using MythByte.Client;
 using MythByte.Networking;
-using MythByte.Shared.Versioning;
 
 var builder = Host.CreateApplicationBuilder(args);
 
 builder.Services
     .RegisterNetworking()
-    .RegisterClient();
+    .RegisterClient(builder.Configuration);
 
-var host = builder.Build();
+using var host = builder.Build();
+using var game = host.Services.GetRequiredService<MythByteGame>();
 
-Console.WriteLine($"MythByte v{AppVersion.Of(typeof(Program).Assembly)}");
-
-await host.RunAsync();
+game.Run();
