@@ -5,7 +5,7 @@ description: How to build MythByte, the multiplayer critter RPG (MonoGame client
 
 # MythByte
 
-MythByte is a top-down multiplayer critter-collecting RPG in the style of classic Pokémon games: a shared, semi-persistent world for about 50 players, turn-based battles, catching critters, a team of 10, a following critter, trading and PvP. Everything is built new in C#. Nothing from the old ESP32/SDL2 C prototype is reused, only its game idea.
+MythByte is a top-down multiplayer critter-collecting RPG in the style of classic Pokémon games: a shared, semi-persistent world for about 50 players, turn-based battles, catching critters with nets, a team of 5 plus a critter box, a following critter, day/night and region-bound spawns, housing, fast travel, trading, PvP, raids and world quests, plus an offline singleplayer mode. Everything is built new in C#. Nothing from the old ESP32/SDL2 C prototype is reused, only its game idea.
 
 The full blueprint is `MythByteDevelopment.md` in the repo root (plan version 1.3). When this skill and the plan disagree, the plan wins; mention the difference.
 
@@ -95,10 +95,13 @@ What lives where:
 ## Gameplay rules
 
 - Rules are pure Application classes: plain inputs plus an injected random source, plain results, no EF. Unit-test them directly.
-- Battle actions: Fight (skill), Catch, Critter (info, later switch), Run. Catch and run resolve first, then the faster critter, then the slower one. A failed catch or run gives the opponent a free turn. HP and speed are clamped (speed minimum 1, heal never above max).
-- Starting skills: Attack (20 × attack multiplier), Block (takes 30% damage this turn), Heal (10% of max HP), Slow (−20 speed for the battle).
+- Battle actions: Fight (equipped skill), Catch (net), Critter (info only), Run. One critter per side for the whole battle, no switching. Catch and run resolve first, then skills by priority and speed. A failed catch or run gives the opponent a free turn. HP and speed are clamped (speed minimum 1, heal never above max). Every action gets a short freeze frame. Battles are skill-based: types, statuses, priority, cooldowns.
+- Basic skills: Attack (20 × attack multiplier), Block (takes 30% damage this turn), Heal (10% of max HP), Slow (−20 speed for the battle). Every species also has unique skills, learned by level; equipped skills (4) can be changed on level up.
 - The critters from the old ESP32 prototype are never used; MythByte gets six new starting species (still to be designed).
-- Starting species and values (encounter chance 3% per step, grace 5 s, catch 30%, run 70%, team size 10, PvP turn timer) are seed data and `GameRulesOptions`, so balancing needs no code change. Formulas are documented in `BATTLE_README.md`.
+- Encounters only in encounter areas; chance depends on area, time of day and the critter's spawn weight (rarity). No grace period.
+- Catch chance depends on the critter's HP, its level compared to the player's level, its catch rate/rarity and the net. Run chance depends on HP and speed.
+- Team size 5; other critters go to the critter box (opened from the house or a tavern room).
+- All content is modular data (JSON data files loaded by the seeders): species, types, rarities, regions, skills, items, nets, accessories, encounter tables, furniture, quests, raids. Numbers live in data and `GameRulesOptions`, never in code. Formulas are documented in `BATTLE_README.md`.
 - A critter at 0 HP cannot be equipped until healed at a healing center.
 
 ## Client (MonoGame)
@@ -107,7 +110,8 @@ What lives where:
 - Renders to a 1920 × 1080 render target, scaled to the window with point sampling (letterboxed). Tile size 64 px; about 30 × 17 tiles visible. 60 FPS fixed timestep; remote entities interpolated.
 - Maps are Tiled `.tmx` with ground, decoration, collision and encounter layers; the server reads the same files.
 - `IApiClient` always returns `ApiResponse<T>`; every failure collapses into a failed envelope.
-- Screens: title, login, character select, character creator, wardrobe, world, battle, team, bag, trade, menus.
+- Screens: title, login, online/offline choice, character select, character creator, wardrobe, world, battle, team, critter box, bag, trade, house editor, fast travel map, menus.
+- Keyboard, controller and mouse everywhere (everything clickable); mobile later.
 - Show the version from `AppVersion` on the title screen.
 
 ## Art style

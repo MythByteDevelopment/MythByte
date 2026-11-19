@@ -23,6 +23,7 @@
 ## Bugs and fixes
 
 ## Foundation
+- [ ] Modular content data (US74)
 
 ## Client
 - [ ] Tiled maps and camera (US05)
@@ -32,3 +33,51 @@
 - [ ] Dedicated game server and connections (US10)
 - [ ] Packet contracts and validation (US11)
 - [ ] Server-authoritative movement and synchronization (US12)
+
+## World
+- [ ] Day/night cycle (US51)
+- [ ] Region-bound critters (US52)
+- [ ] Housing area (US53)
+- [ ] House customisation (US54)
+- [ ] Tavern rooms (US56)
+- [ ] Fast travel (US57)
+
+## Critters
+- [ ] Critter box (US55)
+- [ ] Critter types and type chart (US60)
+- [ ] Critter rarities (US61)
+- [ ] Unique skills and learn sets (US62)
+- [ ] Critter accessories (US63)
+- [ ] Critter auras (US64)
+- [ ] No starter critter: catch your first critter alone (US75)
+
+## Content
+- [ ] World quests (US58)
+
+## Battles
+- [ ] Raid battles (US59)
+- [ ] Skill-based battles (US65)
+- [ ] Freeze frame on battle actions (US66)
+- [ ] Battle without a critter (US76)
+
+## Economy
+- [ ] Nets and net launchers (US67)
+
+## Character
+- [ ] Multiple characters per account (US68)
+- [ ] Character levels and boosts (US69)
+- [ ] Melee accessories (US77)
+
+## Platforms
+- [ ] Full controller support (US70)
+- [ ] Mouse control (US71)
+- [ ] Mobile support (US72)
+- [ ] Offline singleplayer (US73)
+
+## Admin
+- [ ] Admin tools (US78)
+
+## Not yet issues
+Ideas from the plan that are not GitHub issues yet.
+
+- [ ] Write a lot of lore: world history, regions, critters, NPCs and the main storyline (`Lore.md`)

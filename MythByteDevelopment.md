@@ -1,6 +1,6 @@
 # MythByte: Full Multiplayer Critter RPG Development Plan
 
-**Project blueprint — Version 1.3**
+**Project blueprint — Version 1.4**
 
 MythByte is a top-down, pixel-art multiplayer critter-collecting RPG in the style of classic Pokémon games, with a shared, semi-persistent world supporting approximately 50 concurrent players.
 
@@ -20,45 +20,50 @@ MythByte is a multiplayer critter RPG inspired by classic Pokémon games and old
 
 Players enter a shared world where they can:
 
-- Explore towns, routes, forests, caves and dungeons.
-- Walk through tall grass and run into wild critters.
-- Fight wild critters in turn-based battles.
-- Catch critters and build a team.
+- Explore towns, routes, forests, caves and dungeons, each region with its own critters.
+- Experience a day/night cycle in which different critters appear.
+- Walk through encounter areas and run into wild critters.
+- Fight wild critters in skill-based, turn-based battles.
+- Catch critters with a net and build a team of five; keep the rest in a critter box.
 - Customise their character with preset accessories they can change at any time.
 - Choose which critter follows them through the world.
-- Level up their critters.
+- Level up their critters and their own character.
+- Buy a house in the housing area and customise it.
+- Unlock fast travel points.
 - Interact with NPCs, trainers and other players.
-- Battle other players.
+- Battle other players and join raid battles.
+- Take part in world quests that everyone can join.
 - Trade critters and items.
-- Complete quests and discover secrets.
+- Complete quests and discover the lore of the world.
 - Form parties and guilds.
-- Explore the world together.
+- Explore the world together, or play offline on their own.
 
 The world is shared between players rather than creating an individual world for every player. Battles are separate turn-based screens; the world keeps running around them.
 
 ## 1.2 Core gameplay loop
 
 1. The player walks around the world with their equipped critter following them.
-2. Every step in an encounter zone (tall grass, caves) has a chance to start a wild encounter.
-3. A turn-based battle opens between the player's equipped critter and the wild critter.
+2. Only steps inside an encounter area (tall grass, caves, water) can start a wild encounter. The chance depends on the area, the time of day and the critters that live there.
+3. A turn-based battle opens between the player's equipped critter and the wild critter. Each side uses exactly one critter for the whole battle; there is no switching.
 4. Each turn the player chooses one of four actions:
 
 | Action | Effect |
 |---|---|
-| Fight | Pick one of the critter's skills |
-| Catch | Try to catch the wild critter; a failed attempt gives the opponent a free turn |
-| Critter | View both critters' HP and speed (later: switch to another team critter) |
-| Run | Try to escape; a failed attempt gives the opponent a free turn |
+| Fight | Use one of the critter's equipped skills |
+| Catch | Throw or swing the equipped net; a failed attempt gives the opponent a free turn |
+| Critter | View both critters' HP, speed, type and status |
+| Run | Try to escape; the chance depends on HP and speed, and a failed attempt gives the opponent a free turn |
 
-5. The critter with the higher current speed acts first that turn.
-6. The battle ends when one critter reaches 0 HP, the wild critter is caught or the player escapes.
-7. Caught critters join the player's team (maximum 10). Any team critter can be equipped.
+5. Turn order comes from speed and skill priority; types, statuses and skill effects make the outcome depend on the player's choices.
+6. Every action shows a short freeze frame before its effect plays, so each hit, catch and escape reads clearly.
+7. The battle ends when one critter reaches 0 HP, the wild critter is caught or the player escapes.
+8. Caught critters join the team (maximum 5). When the team is full they go to the critter box. Any team critter can be equipped.
 
 ## 1.3 Starting content
 
 These come from the original game idea and become the first seed data.
 
-**Starter skills:**
+**Basic skills** (every critter can learn these):
 
 | Skill | Effect |
 |---|---|
@@ -66,6 +71,8 @@ These come from the original game idea and become the first seed data.
 | Block | The critter takes only 30% of incoming damage this turn |
 | Heal | Restores 10% of the critter's maximum HP, never above the maximum |
 | Slow | Lowers the opponent's speed by 20 for the rest of the battle (minimum 1) |
+
+Besides these, every species has its own set of unique skills (see 1.4).
 
 **Starting species:**
 
@@ -75,15 +82,51 @@ Six new starting species, each with HP, speed and attack multiplier, still to be
 
 | Rule | Value |
 |---|---|
-| Encounter chance | 3% per step in an encounter zone |
-| Encounter grace period | 5 seconds after entering the world or ending a battle |
-| Catch chance | 30% |
-| Run chance | 70% |
-| Team size | 10 critters |
+| Encounter chance | Per step, only inside encounter areas; base chance per area, adjusted by time of day and by each critter's own spawn weight |
+| Catch chance | Depends on the critter's remaining HP, its level compared to the player's level, its rarity and catch rate, and the net used |
+| Run chance | Depends on the player's critter's HP and its speed compared to the wild critter |
+| Team size | 5 critters; the rest live in the critter box |
+| Starter net | Net on a stick |
 
 All values are data (seeded rows and `GameRulesOptions`), not constants in code, so balancing never needs a code change.
 
-## 1.4 Initial technical targets
+## 1.4 Game systems
+
+### World
+- **Day/night cycle.** The world has a server-wide clock. Encounter tables have day, night and always entries, so different critters spawn at night.
+- **Regions.** Every critter species belongs to one or more regions and only spawns there.
+- **Housing area.** A separate housing map. Every player who buys a house gets their own house there; the house appears for everyone. Players customise their house with furniture and decorations they own.
+- **Critter box.** Critters that are not in the team go to the critter box. The box can be opened from the player's house or from a rented tavern room.
+- **Fast travel.** Every area has a fast travel point. A point unlocks once the player has visited the area, and must then be bought before it can be used.
+- **World quests.** Server-wide quests that every player can join at the same time, with shared progress and personal rewards based on contribution.
+- **Raid battles.** Several players fight one strong raid critter together; every player uses one critter, turns are collected from all players and resolved together.
+- **Lore.** The world, regions, critters and NPCs need a written history; a lot of lore still has to be written. The start is in `Lore.md`; the to-do is in `FEATURES.md`.
+
+### Critters
+- **Types.** Every species has one or two types; a type chart makes skills stronger or weaker against other types.
+- **Rarities.** Common, Uncommon, Rare, Epic and Legendary. Rarity affects spawn weight and catch chance.
+- **Unique skills.** Every species has its own skill list. A critter learns new skills at set levels and can change which skills are equipped when it levels up (four equipped skills).
+- **Critter accessories.** Items a critter can wear that give boosts (stats) or immunities (statuses, types).
+- **Auras.** A critter gets a visible aura when it reaches certain levels.
+
+### Character
+- **Multiple characters** per account (maximum from options).
+- **Character levels.** Characters gain experience and level up; levels unlock character boosts (for example better catch chance or cheaper fast travel) and count in the catch chance.
+- **Nets.** Catching uses a net. The starter net is a net on a stick; later the player can upgrade to net launchers with different durabilities and strengths.
+
+### Platforms and input
+- Windows and Linux first, mobile (Android/iOS through MonoGame) later.
+- Keyboard, controller and mouse are all fully supported: everything in the game is clickable. Mobile adds touch, using the same actions.
+
+### Offline singleplayer
+- The client can start a local, offline game. It runs the same game server rules in-process with a local SQLite save.
+- Offline characters are completely separate from online characters and can never be moved online.
+
+### Modular data
+- All game content is data, not code: species, types, type chart, rarities, regions, skills, learn sets, items, nets, critter accessories, character accessories, encounter tables, furniture, fast travel points, quests, world quests and raids.
+- Content lives in JSON data files in the repository, validated on start and loaded by the seeders. Adding content means adding data, never changing code.
+
+## 1.5 Initial technical targets
 
 | Category | Target |
 |---|---|
@@ -91,7 +134,7 @@ All values are data (seeded rows and `GameRulesOptions`), not constants in code,
 | Graphics | Pixel art (64 × 64 sprites and tiles) |
 | Virtual resolution | 1920 × 1080 (30 × ~17 tiles visible), scaled to the window |
 | Client framework | MonoGame |
-| Client platform | Windows and Linux desktop |
+| Client platform | Windows and Linux desktop; mobile later |
 | Primary language | C# |
 | Backend | ASP.NET Core |
 | Database | SQL Server 2022 |
@@ -264,7 +307,7 @@ The game client never references Domain, Application, Infrastructure or server-s
 - Every backend project has one static `Dependencies` class with a public entry point: `RegisterApplication`, `RegisterInfrastructure`, `RegisterNetworking`, `RegisterAPI`, `RegisterGameServer`, each with private helpers per concern (`RegisterServices`, `RegisterRepositories`, `RegisterPersistence`, `RegisterAuthentication`, `RegisterRateLimiter`, `RegisterSwagger`, `RegisterSimulation`, `RegisterBattles`).
 - The API `Program.cs` stays a checklist: register layers, `Database.Migrate()` in a scope, Swagger in Development (UI prefix `api`), forwarded headers, CORS, authentication, authorization, rate limiter, exception handler, `MapControllers`.
 - The GameServer `Program.cs` is the same kind of checklist on `Host.CreateApplicationBuilder`: register Application, Infrastructure, Networking and GameServer, then run. The game server never migrates the database; the API owns migrations.
-- Configuration uses the options pattern everywhere: `JwtOptions`, `TicketOptions`, `GameServerOptions` (port, tick rate, max players, snapshot rate), `WorldOptions` (chunk size, reset rules), `GameRulesOptions` (encounter chance, grace period, catch chance, run chance, team size, PvP turn timer). Each has a `SectionName`, `required` properties and `ValidateDataAnnotations().ValidateOnStart()`.
+- Configuration uses the options pattern everywhere: `JwtOptions`, `TicketOptions`, `GameServerOptions` (port, tick rate, max players, snapshot rate), `WorldOptions` (chunk size, reset rules), `GameRulesOptions` (base encounter, catch and run factors, team size, maximum characters per account, day length, freeze frame length, PvP and raid turn timers). Each has a `SectionName`, `required` properties and `ValidateDataAnnotations().ValidateOnStart()`.
 
 # 4. Client and rendering (MonoGame)
 
@@ -288,7 +331,7 @@ MonoGame handles:
 
 The client coordinates:
 
-- Screens: title, login, character select, character creator, wardrobe, world, battle, team, bag, trade, menus.
+- Screens: title, login, online/offline choice, character select, character creator, wardrobe, world, battle, team, critter box, bag, trade, house editor, fast travel map, menus.
 - Game state.
 - Network connections.
 - Player input messages.
@@ -313,7 +356,7 @@ The client coordinates:
 - Settings (API base URL, game server host and port) come from `appsettings.json` copied to the output, bound to `ClientOptions`.
 - The JWT is kept in memory for the session; the client only stores what it needs to log in again.
 - The client shows its version (from `AppVersion`) on the title screen.
-- Controls: arrow keys or WASD to walk and move through menus, Z / Enter to confirm, X / Escape to go back, a key to open the team screen; gamepad mapped to the same actions.
+- Controls: arrow keys or WASD to walk and move through menus, Z / Enter to confirm, X / Escape to go back, a key to open the team screen; gamepad mapped to the same actions; the mouse can click every button, menu item and battle action, and click on the map to walk there. Touch on mobile maps to the same clicks.
 
 ## 4.5 Character customisation
 
@@ -504,14 +547,15 @@ Battle types:
 | Wild | Player critter vs. wild critter (server picks the wild action) |
 | Trainer | Player critter vs. NPC trainer team |
 | PvP | Player critter vs. another player's critter |
+| Raid | Several players, one critter each, vs. one raid critter |
 
 Turn flow:
 
 1. Server creates the battle instance with each side's critter and its current HP and speed.
 2. Server sends "battle started" to the players involved; they are marked "in battle" for everyone nearby and cannot be encountered or challenged.
-3. Each player sends one action: a skill, catch, switch critter or run.
+3. Each player sends one action: a skill, catch or run. Every side keeps the same critter for the whole battle.
 4. For wild and trainer battles the server chooses the opponent's action.
-5. Server resolves the turn with `BattleRules`: catch and run happen first, then the faster critter acts, then the slower one; Block reduces damage for that turn; HP and speed are clamped.
+5. Server resolves the turn with `BattleRules`: catch and run happen first, then skills in order of priority and speed. Damage uses the skill's power, the attacker's and defender's stats, the type chart, statuses and critter accessories; HP and speed are clamped.
 6. Server sends the turn result (actions, damage, healing, new HP and speed, messages to show).
 7. Repeat until a critter faints, the wild critter is caught or a player runs.
 8. Server applies the result (experience, caught critter, HP saved) through Application services and closes the instance.
@@ -519,7 +563,10 @@ Turn flow:
 Rules:
 
 - `BattleRules`, `CatchRules` and `ExperienceTable` take plain inputs plus an injected random source and return results, so every outcome is reproducible in tests.
-- Wild opponent actions use a simple weighted choice between its skills; trainers can get smarter choices later.
+- Battles are skill-based: skills have power, accuracy, priority, cooldowns, status effects and types, so choosing the right skill at the right moment matters.
+- Every action is announced with a short freeze frame (length from `GameRulesOptions`) before its result animates.
+- Wild opponent actions use a weighted choice between its equipped skills; trainers and raid critters use smarter choices.
+- Raid turns are collected from all players (with a turn timer) and resolved together.
 - PvP turns have a timer (`GameRulesOptions`); a player who does not choose in time uses Block.
 - A disconnect during a wild battle ends it as a run; during PvP it counts as a loss after a short reconnect window.
 - A critter at 0 HP cannot be equipped until it is healed at a healing center.
@@ -527,10 +574,10 @@ Rules:
 
 ## 6.5 Encounter system
 
-- Encounter zones are marked in the map's encounter layer and link to an encounter table.
-- Each encounter table lists species with a weight and a level range per zone.
-- `EncounterRules` takes the step, the zone's table, the grace timer and a random source and returns either "no encounter" or the species and level.
-- The grace period after joining or after a battle is tracked per player on the server.
+- Encounter areas are marked in the map's encounter layer and link to an encounter table. Steps outside these areas never start an encounter.
+- Each encounter table belongs to an area in a region and lists species with a spawn weight, a level range and when they appear (day, night or always).
+- The chance per step combines the area's base chance, the time of day and the spawn weights of the critters that can appear right now; rarity lowers a critter's weight.
+- `EncounterRules` takes the step, the area's table, the world time and a random source and returns either "no encounter" or the species and level.
 - The server always decides; the client only learns about an encounter when the battle starts.
 
 # 7. World architecture
@@ -539,8 +586,10 @@ Rules:
 
 The world should support:
 
-- Multiple maps.
-- Towns with a healing center and a shop.
+- Multiple maps grouped into regions.
+- Towns with a healing center, a shop and a tavern with rentable rooms.
+- A housing area with one house per house owner.
+- Fast travel points in every area.
 - Routes with tall grass.
 - Forests.
 - Caves.
@@ -586,9 +635,13 @@ The world should not reset completely every time the server restarts, but it als
 ## 8.1 Permanent player data
 
 - Account information.
-- Character name and appearance (body preset and equipped accessory per slot).
-- Unlocked accessories.
-- Team of critters (species, nickname, level, experience, current HP, team slot, equipped).
+- Characters (several per account) with name, appearance, level and experience.
+- Unlocked accessories and character boosts.
+- Team of up to five critters and the critter box (species, nickname, level, experience, current HP, learned and equipped skills, accessories, team slot or box, equipped).
+- Nets and their durability.
+- House ownership, furniture and its placement.
+- Unlocked and bought fast travel points.
+- World quest contributions.
 - Bag items.
 - Currency.
 - Defeated trainers and leaders.
@@ -598,6 +651,7 @@ The world should not reset completely every time the server restarts, but it als
 ## 8.2 Semi-persistent world data
 
 - Picked-up item balls.
+- World quest progress and raid state.
 - Rematch timers for trainers.
 - Temporary events (for example a rare critter appearing in a zone for an hour).
 - Temporary environmental changes.
@@ -606,9 +660,9 @@ These can expire or reset according to configurable rules in `WorldOptions`.
 
 ## 8.3 Permanent world data
 
-- Map layout.
+- Map layout and regions.
 - Encounter tables.
-- Species and skill definitions.
+- Species, types, rarities, skills and learn sets (all from the modular data files).
 - Static NPC and trainer definitions.
 - Buildings.
 - Static objects.
@@ -654,6 +708,7 @@ The permanent account credentials and the JWT are never sent through the gamepla
 
 Players should be able to:
 
+- Have several characters per account (maximum from `GameRulesOptions`).
 - Create characters: name, body preset, starting accessories and starter critter.
 - Change accessories in the wardrobe.
 - Select characters.
@@ -661,6 +716,8 @@ Players should be able to:
 - Delete characters (soft delete with `DeletedAt`).
 - View character information and their team.
 - Load saved progression.
+
+Offline characters live only in the local save of the offline mode and never appear in this list.
 
 Character and critter nicknames are validated by a `Validate()` extension on the request DTO (length from `FieldLimits`, allowed characters, uniqueness checked in the service for character names).
 
@@ -676,12 +733,24 @@ Initial database entities:
 | Characters | Player characters (including body preset) |
 | Accessories | Accessory definitions (slot, name, sprite key, how it is unlocked) |
 | CharacterAccessories | Accessories a character owns, and which one is equipped per slot |
-| Species | Critter definitions (name, base HP, speed, attack multiplier, sprite key) |
-| Skills | Skill definitions (damage, healing, block, slow) |
-| SpeciesSkills | Which skills each species can use |
-| Critters | Owned critter instances (owner, species, nickname, level, experience, current HP, team slot, equipped) |
-| EncounterTables | Encounter zones with species, weights and level ranges |
-| Items | Item definitions (catch items, potions) |
+| Species | Critter definitions (name, types, rarity, base stats, catch rate, sprite key, aura levels) |
+| Types | Critter types and the type chart |
+| Regions | Regions and the maps in them |
+| Skills | Skill definitions (type, power, accuracy, priority, cooldown, effects) |
+| SpeciesSkills | Learn set: which skills a species learns at which level |
+| Critters | Owned critter instances (owner, species, nickname, level, experience, current HP, team slot or box, equipped) |
+| CritterSkills | Learned skills per critter and which four are equipped |
+| CritterAccessories | Critter accessory definitions (boosts, immunities) and which critter wears which |
+| EncounterTables | Encounter areas with species, spawn weights, level ranges and time of day |
+| Items | Item definitions (potions, nets and net launchers with durability and strength) |
+| CharacterProgress | Character level, experience and unlocked boosts |
+| Houses | House ownership and plot in the housing area |
+| HouseFurniture | Furniture a character owns and where it stands in the house |
+| FastTravelPoints | Fast travel points, price and area |
+| CharacterFastTravel | Fast travel points a character has unlocked and bought |
+| WorldQuests | Server-wide quests, goals and progress |
+| WorldQuestContributions | Contribution per character |
+| Raids | Raid definitions and raid battle results |
 | Inventory | Bag contents per character |
 | Quests | Quest definitions |
 | CharacterQuests | Player quest progress |
@@ -698,7 +767,7 @@ Use Entity Framework Core for persistence, following the data conventions:
 
 - Guid ids and UTC `CreatedAt` / `UpdatedAt` / `DeletedAt`; soft delete via `HasQueryFilter`.
 - Generic `IRepository<T>` with specific repositories inheriting it; interfaces in Domain, implementations in Infrastructure.
-- Per-entity `Configure()` extension and per-entity seeder (the starting species and skills from section 1.3, encounter tables, items, a demo account per role for development only, seed emails on `@example.com`).
+- Per-entity `Configure()` extension and per-entity seeder (all content from the modular data files: species, types, skills, regions, encounter tables, items, nets, accessories, furniture, quests; plus a demo account per role for development only, seed emails on `@example.com`).
 - `MigrationsHistoryTable("Migrations")`; read every generated migration before applying it.
 - `EnableRetryOnFailure`, so explicit transactions are wrapped in `CreateExecutionStrategy().ExecuteAsync(...)`.
 
@@ -721,12 +790,15 @@ These are the gameplay systems planned after multiplayer foundations work.
 | Player movement | Tile-based walking and running, four directions |
 | Character customisation | Body presets and changeable preset accessories per slot |
 | Following critter | Equipped critter walks behind the player, visible to others |
-| Encounters | Step-based wild encounters in grass and caves |
-| Wild battles | Turn-based Fight / Catch / Critter / Run |
-| Skills | Attack, Block, Heal, Slow; more skills per species later |
-| Catching | Catch chance, catch items with better odds |
-| Team | Up to 10 critters, equip, reorder, rename |
-| Critter progression | Experience from battles, levels raising HP, speed and attack |
+| Day/night cycle | Server-wide clock; different critters at night |
+| Encounters | Step-based, only in encounter areas; chance by area, time and critter; region-bound species |
+| Wild battles | Skill-based turn battles: Fight / Catch / Critter / Run, one critter per side, freeze frames |
+| Types and rarities | Type chart; Common to Legendary |
+| Skills | Basic skills plus unique skills per species, learned by level and swapped on level up |
+| Catching | Nets: net on a stick, then net launchers with durability and strength; chance by HP, level difference and critter |
+| Team and critter box | Team of 5; critter box opened from the house or a tavern room |
+| Critter progression | Experience, levels, auras at set levels, critter accessories (boosts, immunities) |
+| Character progression | Character levels and boosts |
 | Critter log | Seen and caught species |
 | Healing centers | Restore the whole team in towns |
 | Items | Catch items, potions, speed boosts |
@@ -740,6 +812,12 @@ These are the gameplay systems planned after multiplayer foundations work.
 | Quests | Objectives and rewards |
 | Chat | Global, local and party chat |
 | Party system | Explore in a group |
+| Raid battles | Several players against one raid critter |
+| World quests | Server-wide quests everyone can join |
+| Housing | Buy a house in the housing area and customise it |
+| Fast travel | Unlock by visiting, buy to use |
+| Offline mode | Local singleplayer with separate characters |
+| Input and platforms | Keyboard, controller, mouse (everything clickable); mobile later |
 | Guild system | Social organization |
 | Events | Rare critters in a zone for a limited time |
 
@@ -989,10 +1067,12 @@ Test individual systems:
 
 - Movement calculations.
 - Collision detection.
-- Encounter rolls and grace period.
+- Encounter rolls by area, time of day, rarity and spawn weight.
 - Battle turn order and skill effects.
 - Block, heal and slow clamping.
-- Catch and run chances, including the opponent's free turn.
+- Catch chance (HP, level difference, rarity, net) and run chance (HP, speed), including the opponent's free turn.
+- Type chart and skill effects.
+- Critter box and team limit of 5.
 - Team limits and equipping.
 - Accessory equip rules (owned, right slot, not in battle).
 - Experience and levels.
@@ -1187,6 +1267,15 @@ Additional considerations:
 
 ## Later — Long-term additions
 
+- Day/night cycle and region-bound spawns.
+- Types, rarities, unique skills, critter accessories and auras.
+- Character levels and boosts; net upgrades.
+- Critter box, housing area and house customisation.
+- Fast travel points.
+- Raid battles and world quests.
+- Offline singleplayer.
+- Mouse support everywhere, then mobile.
+- Lore for regions, critters and NPCs.
 - Leaders.
 - Parties and guilds.
 - Timed rare-critter events.
