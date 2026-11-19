@@ -1,7 +1,9 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using MythByte.Client.Input;
+using MythByte.Client.Maps;
 using MythByte.Client.Options;
+using MythByte.Client.Rendering;
 using MythByte.Client.Screens;
 
 namespace MythByte.Client;
@@ -13,6 +15,7 @@ public static class Dependencies
         services
             .RegisterOptions(configuration)
             .RegisterInput()
+            .RegisterContent()
             .RegisterScreens()
             .RegisterGame();
 
@@ -34,6 +37,14 @@ public static class Dependencies
     {
         services.AddSingleton(InputMap.Default);
         services.AddSingleton<IInputService, InputService>();
+
+        return services;
+    }
+
+    private static IServiceCollection RegisterContent(this IServiceCollection services)
+    {
+        services.AddSingleton<ITextureCache, TextureCache>();
+        services.AddSingleton<IMapLoader, MapLoader>();
 
         return services;
     }

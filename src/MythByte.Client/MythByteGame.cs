@@ -16,13 +16,15 @@ public class MythByteGame : Game
     private readonly IInputService _input;
     private readonly IScreenManager _screens;
     private readonly IScreenFactory _factory;
+    private readonly ITextureCache _textures;
     private SpriteBatch? _spriteBatch;
     private VirtualScreen? _virtualScreen;
     private Canvas? _canvas;
     private bool _resizing;
 
-    public MythByteGame(IOptions<ClientOptions> options, IInputService input, IScreenManager screens, IScreenFactory factory)
+    public MythByteGame(IOptions<ClientOptions> options, IInputService input, IScreenManager screens, IScreenFactory factory, ITextureCache textures)
     {
+        _textures = textures;
         _input = input;
         _screens = screens;
         _factory = factory;
@@ -53,9 +55,10 @@ public class MythByteGame : Game
 
     protected override void LoadContent()
     {
+        _textures.Initialize(GraphicsDevice);
         _spriteBatch = new SpriteBatch(GraphicsDevice);
         _virtualScreen = new VirtualScreen(GraphicsDevice);
-        _canvas = new Canvas(_spriteBatch, GraphicsDevice);
+        _canvas = new Canvas(_spriteBatch, GraphicsDevice, _textures);
     }
 
     protected override void Update(GameTime gameTime)
