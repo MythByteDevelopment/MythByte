@@ -1,0 +1,15 @@
+{
+ "columns": 8,
+ "image": "placeholder.png",
+ "imageheight": 128,
+ "imagewidth": 512,
+ "margin": 0,
+ "name": "placeholder",
+ "spacing": 0,
+ "tilecount": 16,
+ "tiledversion": "1.11.0",
+ "tileheight": 64,
+ "tilewidth": 64,
+ "type": "tileset",
+ "version": "1.10"
+}

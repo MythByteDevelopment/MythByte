@@ -15,4 +15,9 @@
     <ProjectReference Include="..\MythByte.Shared\MythByte.Shared.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Include="..\MythByte.Client\Content\Maps\**\*.tmj" Link="Content\Maps\%(RecursiveDir)%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="..\MythByte.Client\Content\Tilesets\**\*.tsj" Link="Content\Tilesets\%(RecursiveDir)%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
 </Project>
