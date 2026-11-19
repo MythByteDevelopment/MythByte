@@ -23,6 +23,7 @@
     <File Path=".gitignore" />
     <File Path="Directory.Build.props" />
     <File Path="FEATURES.md" />
+    <File Path="Lore.md" />
     <File Path="MythByteDevelopment.md" />
     <File Path="README.md" />
   </Folder>
