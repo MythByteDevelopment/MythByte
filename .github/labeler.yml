@@ -1,0 +1,25 @@
+art:
+  - changed-files:
+      - any-glob-to-any-file: src/MythByte.Client/Content/**
+
+code:
+  - changed-files:
+      - any-glob-to-any-file:
+          - src/**/*.cs
+          - src/**/*.csproj
+          - tests/**
+          - tools/**
+          - MythByte.slnx
+          - Directory.Build.props
+
+docs:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "**/*.md"
+
+ci:
+  - changed-files:
+      - any-glob-to-any-file:
+          - .github/**
+          - deploy/**
+          - "**/Dockerfile"

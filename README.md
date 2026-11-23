@@ -1,5 +1,9 @@
 # MythByte
 
+[![CI build and test](https://github.com/MythByteDevelopment/MythByte/actions/workflows/ci-build-test.yml/badge.svg?branch=main)](https://github.com/MythByteDevelopment/MythByte/actions/workflows/ci-build-test.yml)
+[![Latest release](https://img.shields.io/github/v/release/MythByteDevelopment/MythByte?include_prereleases&sort=semver)](https://github.com/MythByteDevelopment/MythByte/releases)
+[![License: all rights reserved](https://img.shields.io/badge/license-all%20rights%20reserved-6b6a64)](LICENSE)
+
 Top-down multiplayer critter RPG in sober medieval pixel art: explore a shared world, catch critters, battle and trade. Built in C# with a MonoGame client, a LiteNetLib game server and an ASP.NET Core API.
 
 The full blueprint is `MythByteDevelopment.md`; the full manual lives in the GitHub wiki.
@@ -50,6 +54,32 @@ Screens: title (shows the version), world and a pause menu (Resume, Title Screen
 
 Maps are made in [Tiled](https://www.mapeditor.org/) and live in `src/MythByte.Client/Content/Maps` (tilesets in `Content/Tilesets`). Maps are saved as Tiled JSON (`.tmj`, tilesets `.tsj`). The game server copies the same `.tmj` and `.tsj` files to its output.
 
+## Team and access
+
+Access is given through GitHub teams in the MythByteDevelopment organization; they mirror the Discord roles.
+
+| Team | Repo role | Board | Code owner for |
+|---|---|---|---|
+| Admins | Admin | Admin | Everything, `.github/`, `deploy/`, `Directory.Build.props` |
+| Developers | Write | Write | All code |
+| Pixel Artists | Write | Write | `src/MythByte.Client/Content/` |
+| Testers | Triage | Write | - |
+
+`main` only changes through pull requests: 1 approval from a code owner (`.github/CODEOWNERS`), the `build-test` check must pass, and force-pushes and deleting `main` are blocked.
+
+Published releases are posted to the Discord releases channel by a GitHub webhook. Only Admins can create repositories in the organization, and merged branches are deleted automatically.
+
+Security: Dependabot opens grouped update PRs for NuGet and GitHub Actions every Monday and security fixes as soon as a vulnerability is known, secret scanning blocks pushes that contain secrets, and CodeQL scans C# and the workflows on every push.
+
+Pull requests are labelled automatically by the files they change (`code`, `art`, `docs`, `ci`), and Generate release notes groups them by those labels (`.github/release.yml`). When CI fails on `main` or a release fails, a message is posted in the Discord `mythbyte-github` channel (repository secret `DISCORD_CI_WEBHOOK`).
+
+Issues use the templates in `.github/ISSUE_TEMPLATE` (Bug, User story, Task) and pull requests use `.github/PULL_REQUEST_TEMPLATE.md`. How to contribute is in `CONTRIBUTING.md`.
+
+## License
+
+All rights reserved: the code and art are public to read, not to reuse. See `LICENSE`.
+
+
 ## Continuous integration
 
 `.github/workflows/ci-build-test.yml` runs on every pull request to `main` (and on pushes to `main`): restore, build (Release, `--no-restore`) and test (`--no-build`) of `MythByte.slnx` on .NET 10. A failing build or test fails the check. `main` is protected so pull requests can only be merged when this check passes.
@@ -60,8 +90,9 @@ Publishing a GitHub release with a tag like `v1.2.3` (or `v1.2.3-beta.1` as pre-
 
 1. Validates the tag and takes the version from it (`v1.2.3` becomes `1.2.3`).
 2. Restores, builds and tests the solution with that version. Failing tests stop the release.
-3. Builds and pushes the Docker images `ghcr.io/mythbytedevelopment/mythbyte-api` and `ghcr.io/mythbytedevelopment/mythbyte-gameserver` with the version tag, plus `latest` for non-pre-releases.
-4. Publishes the client self-contained for Windows (`MythByte-<version>-win-x64.zip`) and Linux (`MythByte-<version>-linux-x64.tar.gz`) with `.sha256` files and attaches them to the release.
+3. Waits for an Admin to approve the `release` environment (Actions run > Review deployments) before anything is published.
+4. Builds and pushes the Docker images `ghcr.io/mythbytedevelopment/mythbyte-api` and `ghcr.io/mythbytedevelopment/mythbyte-gameserver` with the version tag, plus `latest` for non-pre-releases.
+5. Publishes the client self-contained for Windows (`MythByte-<version>-win-x64.zip`) and Linux (`MythByte-<version>-linux-x64.tar.gz`) with `.sha256` files and attaches them to the release.
 
 Version numbers are never edited by hand. `GET /api/system/version` returns the running API version and the client shows its version on the title screen and in the window title.
 
