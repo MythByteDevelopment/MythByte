@@ -1,0 +1,23 @@
+changelog:
+  exclude:
+    authors:
+      - dependabot[bot]
+  categories:
+    - title: Bug fixes
+      labels:
+        - bug
+    - title: Code
+      labels:
+        - code
+    - title: Art and maps
+      labels:
+        - art
+    - title: CI and hosting
+      labels:
+        - ci
+    - title: Docs
+      labels:
+        - docs
+    - title: Other
+      labels:
+        - "*"

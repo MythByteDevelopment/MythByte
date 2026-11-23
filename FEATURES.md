@@ -12,6 +12,8 @@
 - `GET /api/system/version`; the client shows its version on the title screen and in the window title
 - GitHub teams (Admins, Developers, Pixel Artists, Testers) with repo and board roles, `CODEOWNERS` and a protected `main`
 - Releases posted to the Discord releases channel; publishing images and client packages waits for an Admin approval (`release` environment)
+- Dependabot (NuGet and Actions, weekly and security fixes), secret scanning with push protection and CodeQL
+- Pull requests labelled by changed paths; generated release notes grouped by label; CI and release failures posted to Discord
 - Issue templates (Bug, User story, Task), a pull request template, `CONTRIBUTING.md` and an all-rights-reserved `LICENSE`
 
 ## Client

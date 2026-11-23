@@ -1,5 +1,9 @@
 # MythByte
 
+[![CI build and test](https://github.com/MythByteDevelopment/MythByte/actions/workflows/ci-build-test.yml/badge.svg?branch=main)](https://github.com/MythByteDevelopment/MythByte/actions/workflows/ci-build-test.yml)
+[![Latest release](https://img.shields.io/github/v/release/MythByteDevelopment/MythByte?include_prereleases&sort=semver)](https://github.com/MythByteDevelopment/MythByte/releases)
+[![License: all rights reserved](https://img.shields.io/badge/license-all%20rights%20reserved-6b6a64)](LICENSE)
+
 Top-down multiplayer critter RPG in sober medieval pixel art: explore a shared world, catch critters, battle and trade. Built in C# with a MonoGame client, a LiteNetLib game server and an ASP.NET Core API.
 
 The full blueprint is `MythByteDevelopment.md`; the full manual lives in the GitHub wiki.
@@ -64,6 +68,10 @@ Access is given through GitHub teams in the MythByteDevelopment organization; th
 `main` only changes through pull requests: 1 approval from a code owner (`.github/CODEOWNERS`), the `build-test` check must pass, and force-pushes and deleting `main` are blocked.
 
 Published releases are posted to the Discord releases channel by a GitHub webhook. Only Admins can create repositories in the organization, and merged branches are deleted automatically.
+
+Security: Dependabot opens grouped update PRs for NuGet and GitHub Actions every Monday and security fixes as soon as a vulnerability is known, secret scanning blocks pushes that contain secrets, and CodeQL scans C# and the workflows on every push.
+
+Pull requests are labelled automatically by the files they change (`code`, `art`, `docs`, `ci`), and Generate release notes groups them by those labels (`.github/release.yml`). When CI fails on `main` or a release fails, a message is posted in the Discord `mythbyte-github` channel (repository secret `DISCORD_CI_WEBHOOK`).
 
 Issues use the templates in `.github/ISSUE_TEMPLATE` (Bug, User story, Task) and pull requests use `.github/PULL_REQUEST_TEMPLATE.md`. How to contribute is in `CONTRIBUTING.md`.
 
