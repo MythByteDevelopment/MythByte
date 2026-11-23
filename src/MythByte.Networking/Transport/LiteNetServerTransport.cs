@@ -62,7 +62,9 @@ public sealed class LiteNetServerTransport : IServerTransport
     private void OnConnectionRequest(ConnectionRequest request)
     {
         var connect = HandshakeSerializer.ReadConnectRequest(request.Data);
-        var rejection = Approve?.Invoke(connect) ?? new ConnectRejected(RejectReason.ServerShutdown, "The server is not accepting players.");
+        var rejection = Approve is null
+            ? new ConnectRejected(RejectReason.ServerShutdown, "The server is not accepting players.")
+            : Approve(connect);
 
         if (rejection is not null || connect is null)
         {

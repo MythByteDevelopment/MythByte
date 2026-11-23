@@ -133,10 +133,12 @@ public class GameServerConnectionTests : IAsyncLifetime
         var (first, firstEvents) = Connect(ServerVersion);
         var (second, secondEvents) = Connect(ServerVersion);
         WaitUntil(() => firstEvents.Connected && secondEvents.Connected, first, second);
+        var bothConnected = firstEvents.Connected && secondEvents.Connected;
         var (third, thirdEvents) = Connect(ServerVersion);
 
         var rejected = WaitUntil(() => thirdEvents.Cause is not null, first, second, third);
 
+        Assert.True(bothConnected);
         Assert.True(rejected);
         Assert.Equal(RejectReason.ServerFull, thirdEvents.Rejected?.Reason);
         Assert.Equal(2, _connections.Count);
@@ -146,11 +148,12 @@ public class GameServerConnectionTests : IAsyncLifetime
     public void Disconnect_ClientCloses_RemovesPlayer()
     {
         var (client, events) = Connect(ServerVersion);
-        WaitUntil(() => events.Connected && _connections.Count == 1, client);
+        var connected = WaitUntil(() => events.Connected && _connections.Count == 1, client);
 
         client.Disconnect();
         var removed = WaitUntil(() => _connections.Count == 0, client);
 
+        Assert.True(connected);
         Assert.True(removed);
     }
 
@@ -183,12 +186,14 @@ public class GameServerConnectionTests : IAsyncLifetime
     public async Task StopAsync_ConnectedClient_GetsShutdownMessage()
     {
         var (client, events) = Connect(ServerVersion);
-        WaitUntil(() => events.Connected && _connections.Count == 1, client);
+        var connected = WaitUntil(() => events.Connected && _connections.Count == 1, client);
 
         await _worker.StopAsync(CancellationToken.None);
         var notified = WaitUntil(() => events.Cause is not null, client);
 
+        Assert.True(connected);
         Assert.True(notified);
+        Assert.Equal(DisconnectCause.Kicked, events.Cause);
         Assert.Equal(RejectReason.ServerShutdown, events.Rejected?.Reason);
     }
 }
