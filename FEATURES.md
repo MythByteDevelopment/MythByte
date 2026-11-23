@@ -10,6 +10,8 @@
 - CI: every pull request to `main` is restored, built and tested by GitHub Actions
 - Releases: publishing a GitHub release builds, tests and pushes the API and game server images to GHCR and attaches Windows and Linux client packages
 - `GET /api/system/version`; the client shows its version on the title screen and in the window title
+- GitHub teams (Admins, Developers, Pixel Artists, Testers) with repo and board roles, `CODEOWNERS` and a protected `main`
+- Releases posted to the Discord releases channel
 
 ## Client
 - MonoGame DesktopGL client on the generic host, Windows and Linux, fixed 60 FPS
@@ -81,6 +83,9 @@
 
 ## Admin
 - [ ] Admin tools (US78)
+
+## Hosting
+- [ ] Sync GitHub teams to Discord roles (US80)
 
 ## Not yet issues
 Ideas from the plan that are not GitHub issues yet.

@@ -50,6 +50,21 @@ Screens: title (shows the version), world and a pause menu (Resume, Title Screen
 
 Maps are made in [Tiled](https://www.mapeditor.org/) and live in `src/MythByte.Client/Content/Maps` (tilesets in `Content/Tilesets`). Maps are saved as Tiled JSON (`.tmj`, tilesets `.tsj`). The game server copies the same `.tmj` and `.tsj` files to its output.
 
+## Team and access
+
+Access is given through GitHub teams in the MythByteDevelopment organization; they mirror the Discord roles.
+
+| Team | Repo role | Board | Code owner for |
+|---|---|---|---|
+| Admins | Admin | Admin | Everything, `.github/`, `deploy/`, `Directory.Build.props` |
+| Developers | Write | Write | All code |
+| Pixel Artists | Write | Write | `src/MythByte.Client/Content/` |
+| Testers | Triage | Write | - |
+
+`main` only changes through pull requests: 1 approval from a code owner (`.github/CODEOWNERS`), the `build-test` check must pass, and force-pushes and deleting `main` are blocked.
+
+Published releases are posted to the Discord releases channel by a GitHub webhook.
+
 ## Continuous integration
 
 `.github/workflows/ci-build-test.yml` runs on every pull request to `main` (and on pushes to `main`): restore, build (Release, `--no-restore`) and test (`--no-build`) of `MythByte.slnx` on .NET 10. A failing build or test fails the check. `main` is protected so pull requests can only be merged when this check passes.

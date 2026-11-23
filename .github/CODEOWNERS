@@ -1,0 +1,7 @@
+* @MythByteDevelopment/admins @MythByteDevelopment/developers
+
+/src/MythByte.Client/Content/ @MythByteDevelopment/admins @MythByteDevelopment/pixel-artists
+
+/.github/ @MythByteDevelopment/admins
+/deploy/ @MythByteDevelopment/admins
+/Directory.Build.props @MythByteDevelopment/admins
