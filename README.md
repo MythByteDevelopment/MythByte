@@ -63,7 +63,14 @@ Access is given through GitHub teams in the MythByteDevelopment organization; th
 
 `main` only changes through pull requests: 1 approval from a code owner (`.github/CODEOWNERS`), the `build-test` check must pass, and force-pushes and deleting `main` are blocked.
 
-Published releases are posted to the Discord releases channel by a GitHub webhook.
+Published releases are posted to the Discord releases channel by a GitHub webhook. Only Admins can create repositories in the organization, and merged branches are deleted automatically.
+
+Issues use the templates in `.github/ISSUE_TEMPLATE` (Bug, User story, Task) and pull requests use `.github/PULL_REQUEST_TEMPLATE.md`. How to contribute is in `CONTRIBUTING.md`.
+
+## License
+
+All rights reserved: the code and art are public to read, not to reuse. See `LICENSE`.
+
 
 ## Continuous integration
 
@@ -75,8 +82,9 @@ Publishing a GitHub release with a tag like `v1.2.3` (or `v1.2.3-beta.1` as pre-
 
 1. Validates the tag and takes the version from it (`v1.2.3` becomes `1.2.3`).
 2. Restores, builds and tests the solution with that version. Failing tests stop the release.
-3. Builds and pushes the Docker images `ghcr.io/mythbytedevelopment/mythbyte-api` and `ghcr.io/mythbytedevelopment/mythbyte-gameserver` with the version tag, plus `latest` for non-pre-releases.
-4. Publishes the client self-contained for Windows (`MythByte-<version>-win-x64.zip`) and Linux (`MythByte-<version>-linux-x64.tar.gz`) with `.sha256` files and attaches them to the release.
+3. Waits for an Admin to approve the `release` environment (Actions run > Review deployments) before anything is published.
+4. Builds and pushes the Docker images `ghcr.io/mythbytedevelopment/mythbyte-api` and `ghcr.io/mythbytedevelopment/mythbyte-gameserver` with the version tag, plus `latest` for non-pre-releases.
+5. Publishes the client self-contained for Windows (`MythByte-<version>-win-x64.zip`) and Linux (`MythByte-<version>-linux-x64.tar.gz`) with `.sha256` files and attaches them to the release.
 
 Version numbers are never edited by hand. `GET /api/system/version` returns the running API version and the client shows its version on the title screen and in the window title.
 

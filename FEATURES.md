@@ -11,7 +11,8 @@
 - Releases: publishing a GitHub release builds, tests and pushes the API and game server images to GHCR and attaches Windows and Linux client packages
 - `GET /api/system/version`; the client shows its version on the title screen and in the window title
 - GitHub teams (Admins, Developers, Pixel Artists, Testers) with repo and board roles, `CODEOWNERS` and a protected `main`
-- Releases posted to the Discord releases channel
+- Releases posted to the Discord releases channel; publishing images and client packages waits for an Admin approval (`release` environment)
+- Issue templates (Bug, User story, Task), a pull request template, `CONTRIBUTING.md` and an all-rights-reserved `LICENSE`
 
 ## Client
 - MonoGame DesktopGL client on the generic host, Windows and Linux, fixed 60 FPS
