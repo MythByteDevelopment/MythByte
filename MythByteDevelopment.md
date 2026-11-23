@@ -347,7 +347,7 @@ The client coordinates:
 - Built for PC: every sprite and tile is 64 × 64 pixels (tile size 64 px).
 - Everything renders to a 1920 × 1080 render target that is scaled to the window with point sampling (letterboxed when the aspect ratio differs), so pixel art stays sharp. The camera shows about 30 × 17 tiles.
 - Sprites are 64 × 64 PNGs in `Content/Sprites`, grouped in sprite sheets per subject; critters have a front sprite (opponent side) and a back sprite (player side); characters have walk frames per direction (down, up, left, right) and are drawn from layers (see 4.5). Battle screens may draw critters scaled up by whole numbers.
-- Maps are made in Tiled (`.tmx`) with layers for ground, decoration, collision and encounter zones; the server reads the same map files for collision and encounter zones.
+- Maps are made in Tiled and saved as Tiled JSON (`.tmj`, tilesets `.tsj`) with layers for ground, decoration, collision and encounter zones; the server reads the same map files for collision and encounter zones.
 - Fixed timestep at 60 FPS on the client; the server's 20 Hz world is interpolated.
 
 ## 4.4 Client composition
@@ -1315,7 +1315,7 @@ These versions represent development milestones, not fixed deadlines. Each one i
 | Runtime | .NET 10 |
 | Solution | `MythByte.slnx`, layered (Domain, Application, Shared, Infrastructure, API) |
 | Desktop client | Windows and Linux, released as GitHub release assets |
-| Maps | Tiled `.tmx`, read by client and server |
+| Maps | Tiled JSON (`.tmj` / `.tsj`), read by client and server |
 | Networking | LiteNetLib / UDP |
 | Server | Dedicated C# server on the generic host, reusing Application + Infrastructure |
 | Backend | ASP.NET Core with `ApiResponse<T>` |

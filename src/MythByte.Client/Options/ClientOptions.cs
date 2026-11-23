@@ -16,4 +16,7 @@ public class ClientOptions
 
     [Range(30, 240)]
     public required int TargetFramesPerSecond { get; init; }
+
+    [Required]
+    public required string StartMap { get; init; }
 }

@@ -38,7 +38,7 @@ Local builds have version `0.0.0-dev` (`Directory.Build.props`); release builds 
 
 ## Client
 
-`dotnet run --project src/MythByte.Client` opens the game window. It renders at 1920 x 1080 and scales to any window size with black bars (pixel art stays sharp). Settings live in `src/MythByte.Client/appsettings.json` (`Client` section: window size, fullscreen, target FPS).
+`dotnet run --project src/MythByte.Client` opens the game window. It renders at 1920 x 1080 and scales to any window size with black bars (pixel art stays sharp). Settings live in `src/MythByte.Client/appsettings.json` (`Client` section: window size, fullscreen, target FPS, start map).
 
 | Action | Keyboard | Gamepad |
 |---|---|---|
@@ -46,7 +46,9 @@ Local builds have version `0.0.0-dev` (`Directory.Build.props`); release builds 
 | Confirm | Z or Enter | A |
 | Back / menu | X or Escape | B or Start |
 
-Screens: title (shows the version), world (placeholder grid until US05) and a pause menu (Resume, Title Screen, Quit).
+Screens: title (shows the version), world and a pause menu (Resume, Title Screen, Quit). The world screen loads the Tiled map `Content/Maps/start.tmj` with placeholder tiles; the camera follows a placeholder player marker that moves one tile per key press and is blocked by the collision layer.
+
+Maps are made in [Tiled](https://www.mapeditor.org/) and live in `src/MythByte.Client/Content/Maps` (tilesets in `Content/Tilesets`). Maps are saved as Tiled JSON (`.tmj`, tilesets `.tsj`). The game server copies the same `.tmj` and `.tsj` files to its output.
 
 ## Continuous integration
 

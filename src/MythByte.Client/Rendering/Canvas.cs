@@ -7,10 +7,12 @@ public sealed class Canvas : ICanvas, IDisposable
 {
     private readonly SpriteBatch _spriteBatch;
     private readonly Texture2D _pixel;
+    private readonly ITextureCache _textures;
 
-    public Canvas(SpriteBatch spriteBatch, GraphicsDevice graphicsDevice)
+    public Canvas(SpriteBatch spriteBatch, GraphicsDevice graphicsDevice, ITextureCache textures)
     {
         _spriteBatch = spriteBatch;
+        _textures = textures;
         _pixel = new Texture2D(graphicsDevice, 1, 1);
         _pixel.SetData([Color.White]);
     }
@@ -19,6 +21,9 @@ public sealed class Canvas : ICanvas, IDisposable
     public int Height => VirtualScreen.Height;
 
     public void Fill(Rectangle area, Color color) => _spriteBatch.Draw(_pixel, area, color);
+
+    public void Sprite(string texturePath, Rectangle source, Rectangle destination) =>
+        _spriteBatch.Draw(_textures.Get(texturePath), destination, source, Color.White);
 
     public void Text(string text, Vector2 position, int scale, Color color)
     {

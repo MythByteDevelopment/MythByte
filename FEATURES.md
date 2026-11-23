@@ -5,7 +5,7 @@
 - Strict project references per the dependency rules in `MythByteDevelopment.md`
 - `Dependencies` class with a `RegisterX()` entry point per project; short `Program.cs` checklists
 - Shared base types: `ApiResponse<T>`, `Roles`, `Permissions`, `FieldLimits`, `AppVersion`
-- xUnit + Moq test projects (74 tests)
+- xUnit + Moq test projects (122 tests)
 - `Directory.Build.props` with .NET 10, nullable, and version `0.0.0-dev` for local builds
 - CI: every pull request to `main` is restored, built and tested by GitHub Actions
 - Releases: publishing a GitHub release builds, tests and pushes the API and game server images to GHCR and attaches Windows and Linux client packages
@@ -15,7 +15,12 @@
 - MonoGame DesktopGL client on the generic host, Windows and Linux, fixed 60 FPS
 - 1920 x 1080 render target scaled with point sampling and letterboxing; resizable window
 - Action-based input for keyboard and gamepad (arrows/WASD, Z/Enter, X/Escape, D-pad/stick, A, B/Start)
-- Screen stack with fade transitions: title, world placeholder and pause menu
+- Screen stack with fade transitions: title, world and pause menu
+- Tiled JSON maps (`.tmj`, external `.tsj` or embedded tilesets) read with a `System.Text.Json` source generator by a shared `TiledMapReader` that the game server can use too
+- Ground and decoration layers drawn at 64 px tiles, only the visible part of the map
+- Camera that follows the player and stays inside the map (small maps are centred)
+- Local collision from the collision layer; placeholder player marker moves one tile per key press
+- Placeholder sober medieval tileset and a 48 x 32 start map with town square, pond, path and tall grass
 - Built-in 5 x 7 pixel font and sober medieval colour palette
 
 # To-do
@@ -26,7 +31,7 @@
 - [ ] Modular content data (US74)
 
 ## Client
-- [ ] Tiled maps and camera (US05)
+- [ ] In-app map builder (US79)
 - [ ] Single-player movement and following critter (US09)
 
 ## Networking

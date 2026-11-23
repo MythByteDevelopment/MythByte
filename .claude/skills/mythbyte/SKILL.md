@@ -108,7 +108,7 @@ What lives where:
 
 - MonoGame DesktopGL, Windows and Linux. Built with `Host.CreateApplicationBuilder` and `Dependencies.RegisterClient()`; the `Game` class comes from DI.
 - Renders to a 1920 × 1080 render target, scaled to the window with point sampling (letterboxed). Tile size 64 px; about 30 × 17 tiles visible. 60 FPS fixed timestep; remote entities interpolated.
-- Maps are Tiled `.tmx` with ground, decoration, collision and encounter layers; the server reads the same files.
+- Maps are Tiled JSON (`.tmj`, tilesets `.tsj`, layer format CSV so `data` is a plain array) with ground, decoration, collision and encounter layers; the server reads the same files.
 - `IApiClient` always returns `ApiResponse<T>`; every failure collapses into a failed envelope.
 - Screens: title, login, online/offline choice, character select, character creator, wardrobe, world, battle, team, critter box, bag, trade, house editor, fast travel map, menus.
 - Keyboard, controller and mouse everywhere (everything clickable); mobile later.
