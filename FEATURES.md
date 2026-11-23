@@ -28,6 +28,12 @@
 - Placeholder sober medieval tileset and a 48 x 32 start map with town square, pond, path and tall grass
 - Built-in 5 x 7 pixel font and sober medieval colour palette
 
+## Game server
+- Headless game server on the generic host with `GameServerOptions` (port 7780, 20 Hz, 50 players, disconnect timeout)
+- LiteNetLib UDP transport for server and client in `MythByte.Networking`
+- Connect handshake with protocol and client version; outdated clients get "Update your client to vX.Y.Z."
+- Connection manager with small network ids, max players, timeouts and a shutdown message for connected players
+
 # To-do
 
 ## Bugs and fixes
@@ -40,7 +46,6 @@
 - [ ] Single-player movement and following critter (US09)
 
 ## Networking
-- [ ] Dedicated game server and connections (US10)
 - [ ] Packet contracts and validation (US11)
 - [ ] Server-authoritative movement and synchronization (US12)
 

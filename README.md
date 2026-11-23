@@ -80,6 +80,12 @@ Issues use the templates in `.github/ISSUE_TEMPLATE` (Bug, User story, Task) and
 All rights reserved: the code and art are public to read, not to reuse. See `LICENSE`.
 
 
+## Game server
+
+`dotnet run --project src/MythByte.GameServer` starts the headless game server on UDP 7780. Settings live in `src/MythByte.GameServer/appsettings.json` (`GameServer` section: `Port`, `TickRate`, `MaxPlayers`, `DisconnectTimeoutMilliseconds`; override with environment variables like `GameServer__MaxPlayers`).
+
+Clients connect with their protocol and app version. Another version is rejected with "Update your client to vX.Y.Z.", and a full server refuses new players. The handshake is documented in `NETWORKING_README.md`.
+
 ## Continuous integration
 
 `.github/workflows/ci-build-test.yml` runs on every pull request to `main` (and on pushes to `main`): restore, build (Release, `--no-restore`) and test (`--no-build`) of `MythByte.slnx` on .NET 10. A failing build or test fails the check. `main` is protected so pull requests can only be merged when this check passes.

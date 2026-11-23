@@ -1,4 +1,5 @@
 using Microsoft.Extensions.DependencyInjection;
+using MythByte.Networking.Transport;
 
 namespace MythByte.Networking;
 
@@ -13,6 +14,9 @@ public static class Dependencies
 
     private static IServiceCollection RegisterTransport(this IServiceCollection services)
     {
+        services.AddSingleton<IServerTransport, LiteNetServerTransport>();
+        services.AddTransient<IClientTransport, LiteNetClientTransport>();
+
         return services;
     }
 }
