@@ -23,6 +23,7 @@
     <ProjectReference Include="..\..\src\MythByte.Application\MythByte.Application.csproj" />
     <ProjectReference Include="..\..\src\MythByte.Infrastructure\MythByte.Infrastructure.csproj" />
     <ProjectReference Include="..\..\src\MythByte.Networking\MythByte.Networking.csproj" />
+    <ProjectReference Include="..\..\src\MythByte.GameServer\MythByte.GameServer.csproj" />
     <ProjectReference Include="..\..\src\MythByte.Shared\MythByte.Shared.csproj" />
   </ItemGroup>
 

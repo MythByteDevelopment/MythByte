@@ -25,6 +25,7 @@
     <File Path="FEATURES.md" />
     <File Path="Lore.md" />
     <File Path="MythByteDevelopment.md" />
+    <File Path="NETWORKING_README.md" />
     <File Path="README.md" />
   </Folder>
   <Folder Name="/Tests/">

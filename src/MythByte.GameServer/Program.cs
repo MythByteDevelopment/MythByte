@@ -10,7 +10,7 @@ builder.Services
     .RegisterApplication()
     .RegisterInfrastructure()
     .RegisterNetworking()
-    .RegisterGameServer();
+    .RegisterGameServer(builder.Configuration);
 
 var host = builder.Build();
 
