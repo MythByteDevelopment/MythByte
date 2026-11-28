@@ -23,9 +23,13 @@
 - Screen stack with fade transitions: title, world and pause menu
 - Tiled JSON maps (`.tmj`, external `.tsj` or embedded tilesets) read with a `System.Text.Json` source generator by a shared `TiledMapReader` that the game server can use too
 - Ground and decoration layers drawn at 64 px tiles, only the visible part of the map
+- Map tiles stay correct when a tileset is reordered: maps store the `name` of each used tile (`tileNames:<tileset>` property), `TiledMapReader` remaps tiles by name and fails with the map, tileset, name and positions when a name no longer exists
+- `tools/MythByte.MapTool` `sync-names` command writes or refreshes the `tileNames` properties and, with `--rewrite-ids`, rewrites a map's ids to the new tileset order (keeps Tiled's formatting and flip flags)
+- Tiles bigger than the map grid (64 x 128, 128 x 64, 128 x 128) drawn at full size, anchored at the bottom-left of their cell like Tiled; big tiles just outside the view whose artwork reaches into it are drawn too
 - Camera that follows the player and stays inside the map (small maps are centred)
 - Local collision from the collision layer; placeholder player marker moves one tile per key press
 - Placeholder sober medieval tileset and a 48 x 32 start map with town square, pond, path and tall grass
+- Grass area tilesets in `Tilesets/Outdoor/Grass`, one sheet per artwork size: `grassarea_64x64` (ground, path and water pieces, small objects), `grassarea_64x128` (birch, dead, small oak and pine trees), `grassarea_128x64` (logs) and `grassarea_128x128` (big oak); every tile has a `name` property
 - Built-in 5 x 7 pixel font and sober medieval colour palette
 
 ## Game server

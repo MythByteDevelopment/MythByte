@@ -34,5 +34,6 @@
   </Folder>
   <Folder Name="/Tools/">
     <Project Path="tools/MythByte.BotClient/MythByte.BotClient.csproj" />
+    <Project Path="tools/MythByte.MapTool/MythByte.MapTool.csproj" />
   </Folder>
 </Solution>

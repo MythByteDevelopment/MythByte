@@ -33,8 +33,78 @@ public static class TiledMapReader
         foreach (var layer in layers.Where(l => l.Width != map.Width || l.Height != map.Height))
             throw new InvalidDataException($"Layer '{layer.Name}' in '{path}' must be {map.Width} x {map.Height} tiles.");
 
-        return new TileMap(map.Width, map.Height, map.TileWidth, map.TileHeight, tilesets, layers, ReadProperties(map.Properties));
+        var properties = ReadProperties(map.Properties);
+        var remapped = RemapByName(layers, tilesets, properties, path);
+
+        return new TileMap(map.Width, map.Height, map.TileWidth, map.TileHeight, tilesets, remapped, properties);
     }
+
+    private static List<TileLayer> RemapByName(List<TileLayer> layers, List<Tileset> tilesets, Dictionary<string, string> properties, string path)
+    {
+        var remaps = new Dictionary<Tileset, Dictionary<int, int?>>();
+        var storedNames = new Dictionary<Tileset, Dictionary<int, string>>();
+
+        foreach (var tileset in tilesets)
+        {
+            if (!properties.TryGetValue(TileNames.PropertyName(tileset.Name), out var value))
+                continue;
+
+            Dictionary<int, string> stored;
+            try
+            {
+                stored = TileNames.Parse(value);
+            }
+            catch (FormatException exception)
+            {
+                throw new InvalidDataException($"Map '{path}' has an invalid '{TileNames.PropertyName(tileset.Name)}' property: {exception.Message}", exception);
+            }
+
+            var current = TileNames.ByName(tileset.TileNames);
+            remaps[tileset] = stored.ToDictionary(s => s.Key, s => current.TryGetValue(s.Value, out var localId) ? localId : (int?)null);
+            storedNames[tileset] = stored;
+        }
+
+        if (remaps.Count == 0)
+            return layers;
+
+        var missing = new List<string>();
+        var result = new List<TileLayer>();
+
+        foreach (var layer in layers)
+        {
+            var gids = new int[layer.Width * layer.Height];
+            for (var y = 0; y < layer.Height; y++)
+            {
+                for (var x = 0; x < layer.Width; x++)
+                {
+                    var gid = layer.GidAt(x, y);
+                    gids[y * layer.Width + x] = gid;
+
+                    var tileset = OwnerOf(gid, tilesets);
+                    if (tileset is null || !remaps.TryGetValue(tileset, out var remap) || !remap.TryGetValue(gid - tileset.FirstGid, out var localId))
+                        continue;
+
+                    if (localId is null)
+                    {
+                        missing.Add($"tileset '{tileset.Name}', tile '{storedNames[tileset][gid - tileset.FirstGid]}', layer '{layer.Name}' at ({x}, {y})");
+                        continue;
+                    }
+
+                    gids[y * layer.Width + x] = tileset.FirstGid + localId.Value;
+                }
+            }
+
+            result.Add(new TileLayer(layer.Name, layer.Width, layer.Height, gids));
+        }
+
+        if (missing.Count > 0)
+            throw new InvalidDataException($"Map '{path}' uses tiles whose name no longer exists in their tileset: {string.Join("; ", missing)}.");
+
+        return result;
+    }
+
+    private static Tileset? OwnerOf(int gid, List<Tileset> tilesets) =>
+        gid <= 0 ? null : tilesets.Where(t => t.FirstGid <= gid).MaxBy(t => t.FirstGid);
 
     private static Tileset ReadTileset(TiledTilesetJson reference, string directory, string path)
     {
@@ -64,8 +134,17 @@ public static class TiledMapReader
             tileset.TileHeight,
             tileset.TileCount,
             tileset.Columns,
-            Path.GetFullPath(Path.Combine(tilesetDirectory, tileset.Image)));
+            Path.GetFullPath(Path.Combine(tilesetDirectory, tileset.Image)),
+            ReadTileNames(tileset.Tiles));
     }
+
+    private static Dictionary<int, string> ReadTileNames(List<TiledTileJson>? tiles) =>
+        (tiles ?? [])
+            .Select(t => (t.Id, Name: t.Properties?.FirstOrDefault(p => p.Name == TileNames.TileProperty)))
+            .Where(t => t.Name is { Value.ValueKind: JsonValueKind.String })
+            .Select(t => (t.Id, Name: t.Name!.Value.GetString() ?? string.Empty))
+            .Where(t => t.Name.Length > 0)
+            .ToDictionary(t => t.Id, t => t.Name);
 
     private static TileLayer ReadLayer(TiledLayerJson layer, string path)
     {

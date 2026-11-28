@@ -1,0 +1,27 @@
+{
+ "columns": 1,
+ "image": "grassarea_128x128.png",
+ "imageheight": 128,
+ "imagewidth": 128,
+ "margin": 0,
+ "name": "grassarea_128x128",
+ "spacing": 0,
+ "tilecount": 1,
+ "tiledversion": "1.11.0",
+ "tileheight": 128,
+ "tiles": [
+  {
+   "id": 0,
+   "properties": [
+    {
+     "name": "name",
+     "type": "string",
+     "value": "tree_oak_big"
+    }
+   ]
+  }
+ ],
+ "tilewidth": 128,
+ "type": "tileset",
+ "version": "1.10"
+}

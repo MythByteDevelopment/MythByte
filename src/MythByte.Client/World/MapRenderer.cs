@@ -8,10 +8,13 @@ public static class MapRenderer
 {
     public static void Draw(ICanvas canvas, TileMap map, Point camera)
     {
-        var firstX = Math.Max(0, FloorDiv(camera.X, map.TileWidth));
+        var extraColumns = ExtraCells(map.Tilesets.Select(t => t.TileWidth), map.TileWidth);
+        var extraRows = ExtraCells(map.Tilesets.Select(t => t.TileHeight), map.TileHeight);
+
+        var firstX = Math.Max(0, FloorDiv(camera.X, map.TileWidth) - extraColumns);
         var firstY = Math.Max(0, FloorDiv(camera.Y, map.TileHeight));
         var lastX = Math.Min(map.Width - 1, FloorDiv(camera.X + canvas.Width - 1, map.TileWidth));
-        var lastY = Math.Min(map.Height - 1, FloorDiv(camera.Y + canvas.Height - 1, map.TileHeight));
+        var lastY = Math.Min(map.Height - 1, FloorDiv(camera.Y + canvas.Height - 1, map.TileHeight) + extraRows);
 
         foreach (var name in MapLayers.Drawn)
         {
@@ -30,11 +33,21 @@ public static class MapRenderer
 
                     var (sourceX, sourceY) = tileset.SourceOf(gid);
                     var source = new Rectangle(sourceX, sourceY, tileset.TileWidth, tileset.TileHeight);
-                    var destination = new Rectangle(x * map.TileWidth - camera.X, y * map.TileHeight - camera.Y, map.TileWidth, map.TileHeight);
+                    var destination = new Rectangle(
+                        x * map.TileWidth - camera.X,
+                        (y + 1) * map.TileHeight - tileset.TileHeight - camera.Y,
+                        tileset.TileWidth,
+                        tileset.TileHeight);
                     canvas.Sprite(tileset.ImagePath, source, destination);
                 }
             }
         }
+    }
+
+    private static int ExtraCells(IEnumerable<int> tileSizes, int cellSize)
+    {
+        var largest = tileSizes.DefaultIfEmpty(cellSize).Max();
+        return Math.Max(0, (largest - cellSize + cellSize - 1) / cellSize);
     }
 
     private static int FloorDiv(int value, int divisor) => (int)Math.Floor((double)value / divisor);

@@ -1,6 +1,6 @@
 namespace MythByte.Shared.Maps;
 
-public sealed record Tileset(int FirstGid, string Name, int TileWidth, int TileHeight, int TileCount, int Columns, string ImagePath)
+public sealed record Tileset(int FirstGid, string Name, int TileWidth, int TileHeight, int TileCount, int Columns, string ImagePath, IReadOnlyDictionary<int, string>? TileNames = null)
 {
     public bool Contains(int gid) => gid >= FirstGid && gid < FirstGid + TileCount;
 

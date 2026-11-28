@@ -23,7 +23,12 @@ internal sealed record TiledTilesetJson(
     [property: JsonPropertyName("tileheight")] int TileHeight,
     [property: JsonPropertyName("tilecount")] int TileCount,
     [property: JsonPropertyName("columns")] int Columns,
-    [property: JsonPropertyName("image")] string? Image);
+    [property: JsonPropertyName("image")] string? Image,
+    [property: JsonPropertyName("tiles")] List<TiledTileJson>? Tiles);
+
+internal sealed record TiledTileJson(
+    [property: JsonPropertyName("id")] int Id,
+    [property: JsonPropertyName("properties")] List<TiledPropertyJson>? Properties);
 
 internal sealed record TiledLayerJson(
     [property: JsonPropertyName("type")] string? Type,

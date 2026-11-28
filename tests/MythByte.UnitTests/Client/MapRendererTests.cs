@@ -78,4 +78,66 @@ public class MapRendererTests
         Assert.Equal(new Rectangle(0, 0, 64, 64), _sprites[0].Source);
         Assert.Equal(new Rectangle(0, 64, 64, 64), _sprites[1].Source);
     }
+
+    [Fact]
+    public void Draw_TallTile_DrawsFullSizeAnchoredAtBottomLeftOfCell()
+    {
+        var map = CreateDecorationMap(2, 2, 64, 128, OneTileAt(2, 2, 0, 0));
+
+        MapRenderer.Draw(_canvas.Object, map, Point.Zero);
+
+        var sprite = Assert.Single(_sprites);
+        Assert.Equal(new Rectangle(64, 0, 64, 128), sprite.Source);
+        Assert.Equal(new Rectangle(0, -64, 64, 128), sprite.Destination);
+    }
+
+    [Fact]
+    public void Draw_WideTile_DrawsFullSizeAnchoredAtBottomLeftOfCell()
+    {
+        var map = CreateDecorationMap(2, 2, 128, 64, OneTileAt(2, 2, 0, 0));
+
+        MapRenderer.Draw(_canvas.Object, map, Point.Zero);
+
+        var sprite = Assert.Single(_sprites);
+        Assert.Equal(new Rectangle(128, 0, 128, 64), sprite.Source);
+        Assert.Equal(new Rectangle(0, 0, 128, 64), sprite.Destination);
+    }
+
+    [Fact]
+    public void Draw_LargeTile_DrawsFullSizeAnchoredAtBottomLeftOfCell()
+    {
+        var map = CreateDecorationMap(2, 2, 128, 128, OneTileAt(2, 2, 0, 0));
+
+        MapRenderer.Draw(_canvas.Object, map, Point.Zero);
+
+        var sprite = Assert.Single(_sprites);
+        Assert.Equal(new Rectangle(128, 0, 128, 128), sprite.Source);
+        Assert.Equal(new Rectangle(0, -64, 128, 128), sprite.Destination);
+    }
+
+    [Fact]
+    public void Draw_LargeTileCellOutsideViewReachingIntoIt_DrawsTile()
+    {
+        var map = CreateDecorationMap(3, 2, 128, 128, OneTileAt(3, 2, 0, 1));
+
+        MapRenderer.Draw(_canvas.Object, map, new Point(64, 0));
+
+        var sprite = Assert.Single(_sprites);
+        Assert.Equal(new Rectangle(-64, 0, 128, 128), sprite.Destination);
+    }
+
+    private static int[] OneTileAt(int width, int height, int x, int y)
+    {
+        var gids = new int[width * height];
+        gids[y * width + x] = 2;
+        return gids;
+    }
+
+    private static TileMap CreateDecorationMap(int width, int height, int tileWidth, int tileHeight, int[] decoration)
+    {
+        var layers = new List<TileLayer> { new(MapLayers.Decoration, width, height, decoration) };
+        var tilesets = new[] { new Tileset(1, "big", tileWidth, tileHeight, 4, 4, "big.png") };
+
+        return new TileMap(width, height, 64, 64, tilesets, layers, new Dictionary<string, string>());
+    }
 }

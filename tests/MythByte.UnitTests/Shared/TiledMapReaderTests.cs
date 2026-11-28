@@ -19,7 +19,7 @@ public class TiledMapReaderTests : IDisposable
 
     public void Dispose() => Directory.Delete(_directory, true);
 
-    private string WriteMap(string layers, string tileset = ExternalTileset, string orientation = "orthogonal", string infinite = "false")
+    private string WriteMap(string layers, string tileset = ExternalTileset, string orientation = "orthogonal", string infinite = "false", string extraProperties = "")
     {
         var path = Path.Combine(_directory, "Maps", "map.tmj");
         File.WriteAllText(path,
@@ -35,7 +35,7 @@ public class TiledMapReaderTests : IDisposable
               "properties": [
                 { "name": "spawnX", "type": "int", "value": 2 },
                 { "name": "spawnY", "type": "int", "value": 1 },
-                { "name": "title", "type": "string", "value": "Test" }
+                { "name": "title", "type": "string", "value": "Test" }{{extraProperties}}
               ],
               "tilesets": [{{tileset}}],
               "layers": [{{layers}}]
@@ -43,6 +43,16 @@ public class TiledMapReaderTests : IDisposable
             """);
         return path;
     }
+
+    private void WriteNamedTileset(params string[] names)
+    {
+        var tiles = string.Join(", ", names.Select((name, id) => $$"""{ "id": {{id}}, "properties": [{ "name": "name", "type": "string", "value": "{{name}}" }] }"""));
+        File.WriteAllText(Path.Combine(_directory, "Tilesets", "tiles.tsj"),
+            $$"""{ "type": "tileset", "name": "tiles", "tilewidth": 64, "tileheight": 64, "tilecount": 16, "columns": 8, "image": "tiles.png", "tiles": [{{tiles}}] }""");
+    }
+
+    private static string TileNamesProperty(string value) =>
+        $$""", { "name": "tileNames:tiles", "type": "string", "value": "{{value}}" }""";
 
     private static string Layer(string name, string data, string? encoding = null) =>
         $$"""{ "type": "tilelayer", "name": "{{name}}", "width": 3, "height": 2{{(encoding is null ? "" : $", \"encoding\": \"{encoding}\"")}}, "data": {{data}} }""";
@@ -162,5 +172,79 @@ public class TiledMapReaderTests : IDisposable
         var path = WriteMap(Ground);
 
         Assert.Throws<FileNotFoundException>(() => TiledMapReader.Read(path));
+    }
+
+    [Fact]
+    public void Read_NamedTileset_ReadsTileNames()
+    {
+        WriteNamedTileset("grass", "path");
+        var path = WriteMap(Ground);
+
+        var map = TiledMapReader.Read(path);
+
+        var tileset = Assert.Single(map.Tilesets);
+        Assert.Equal("grass", tileset.TileNames![0]);
+        Assert.Equal("path", tileset.TileNames[1]);
+    }
+
+    [Fact]
+    public void Read_ReorderedTileset_RemapsTilesByName()
+    {
+        WriteNamedTileset("path", "water", "grass");
+        var path = WriteMap(Layer("Ground", "[1, 2, 0, 1, 1, 2]"), extraProperties: TileNamesProperty("0=grass;1=path"));
+
+        var map = TiledMapReader.Read(path);
+
+        var ground = map.Layer(MapLayers.Ground)!;
+        Assert.Equal(3, ground.GidAt(0, 0));
+        Assert.Equal(1, ground.GidAt(1, 0));
+        Assert.Equal(0, ground.GidAt(2, 0));
+        Assert.Equal(1, ground.GidAt(2, 1));
+    }
+
+    [Fact]
+    public void Read_RenamedTile_ThrowsWithMapTilesetNameAndPositions()
+    {
+        WriteNamedTileset("grass_light", "path");
+        var path = WriteMap(Layer("Ground", "[1, 2, 2, 2, 2, 1]"), extraProperties: TileNamesProperty("0=grass;1=path"));
+
+        var exception = Assert.Throws<InvalidDataException>(() => TiledMapReader.Read(path));
+
+        Assert.Contains(path, exception.Message);
+        Assert.Contains("tileset 'tiles'", exception.Message);
+        Assert.Contains("tile 'grass'", exception.Message);
+        Assert.Contains("(0, 0)", exception.Message);
+        Assert.Contains("(2, 1)", exception.Message);
+    }
+
+    [Fact]
+    public void Read_DeletedTile_ThrowsInvalidDataException()
+    {
+        WriteNamedTileset("path");
+        var path = WriteMap(Layer("Ground", "[2, 1, 1, 1, 1, 1]"), extraProperties: TileNamesProperty("0=path;1=well"));
+
+        var exception = Assert.Throws<InvalidDataException>(() => TiledMapReader.Read(path));
+
+        Assert.Contains("tile 'well'", exception.Message);
+    }
+
+    [Fact]
+    public void Read_MapWithoutTileNames_KeepsTileIds()
+    {
+        WriteNamedTileset("path", "water", "grass");
+        var path = WriteMap(Layer("Ground", "[1, 2, 3, 1, 2, 3]"));
+
+        var map = TiledMapReader.Read(path);
+
+        Assert.Equal(1, map.Layer(MapLayers.Ground)!.GidAt(0, 0));
+        Assert.Equal(3, map.Layer(MapLayers.Ground)!.GidAt(2, 1));
+    }
+
+    [Fact]
+    public void Read_InvalidTileNamesProperty_ThrowsInvalidDataException()
+    {
+        var path = WriteMap(Ground, extraProperties: TileNamesProperty("grass"));
+
+        Assert.Throws<InvalidDataException>(() => TiledMapReader.Read(path));
     }
 }

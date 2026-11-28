@@ -1,0 +1,37 @@
+{
+ "columns": 2,
+ "image": "grassarea_128x64.png",
+ "imageheight": 64,
+ "imagewidth": 256,
+ "margin": 0,
+ "name": "grassarea_128x64",
+ "spacing": 0,
+ "tilecount": 2,
+ "tiledversion": "1.11.0",
+ "tileheight": 64,
+ "tiles": [
+  {
+   "id": 0,
+   "properties": [
+    {
+     "name": "name",
+     "type": "string",
+     "value": "log"
+    }
+   ]
+  },
+  {
+   "id": 1,
+   "properties": [
+    {
+     "name": "name",
+     "type": "string",
+     "value": "log_mossy"
+    }
+   ]
+  }
+ ],
+ "tilewidth": 128,
+ "type": "tileset",
+ "version": "1.10"
+}

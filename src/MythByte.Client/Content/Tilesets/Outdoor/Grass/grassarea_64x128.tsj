@@ -1,0 +1,57 @@
+{
+ "columns": 4,
+ "image": "grassarea_64x128.png",
+ "imageheight": 128,
+ "imagewidth": 256,
+ "margin": 0,
+ "name": "grassarea_64x128",
+ "spacing": 0,
+ "tilecount": 4,
+ "tiledversion": "1.11.0",
+ "tileheight": 128,
+ "tiles": [
+  {
+   "id": 0,
+   "properties": [
+    {
+     "name": "name",
+     "type": "string",
+     "value": "tree_birch"
+    }
+   ]
+  },
+  {
+   "id": 1,
+   "properties": [
+    {
+     "name": "name",
+     "type": "string",
+     "value": "tree_dead"
+    }
+   ]
+  },
+  {
+   "id": 2,
+   "properties": [
+    {
+     "name": "name",
+     "type": "string",
+     "value": "tree_oak_small"
+    }
+   ]
+  },
+  {
+   "id": 3,
+   "properties": [
+    {
+     "name": "name",
+     "type": "string",
+     "value": "tree_pine"
+    }
+   ]
+  }
+ ],
+ "tilewidth": 64,
+ "type": "tileset",
+ "version": "1.10"
+}

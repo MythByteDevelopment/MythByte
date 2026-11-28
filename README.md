@@ -23,8 +23,9 @@ The full blueprint is `MythByteDevelopment.md`; the full manual lives in the Git
 | Tests | `tests/MythByte.UnitTests` | xUnit + Moq unit tests | Application, Client, Domain, Shared |
 | Tests | `tests/MythByte.IntegrationTests` | Integration tests | Application, Infrastructure, Networking, Shared |
 | Tools | `tools/MythByte.BotClient` | Headless bot client for load tests | Networking, Shared |
+| Tools | `tools/MythByte.MapTool` | Map command-line tool (`sync-names`) | Shared |
 
-Every project that registers services has a static `Dependencies` class with one `RegisterX()` entry point (`RegisterApplication`, `RegisterInfrastructure`, `RegisterNetworking`, `RegisterAPI`, `RegisterGameServer`, `RegisterClient`, `RegisterBotClient`).
+Every project that registers services has a static `Dependencies` class with one `RegisterX()` entry point (`RegisterApplication`, `RegisterInfrastructure`, `RegisterNetworking`, `RegisterAPI`, `RegisterGameServer`, `RegisterClient`, `RegisterBotClient`, `RegisterMapTool`).
 
 ## Quick start
 
@@ -52,7 +53,9 @@ Local builds have version `0.0.0-dev` (`Directory.Build.props`); release builds 
 
 Screens: title (shows the version), world and a pause menu (Resume, Title Screen, Quit). The world screen loads the Tiled map `Content/Maps/start.tmj` with placeholder tiles; the camera follows a placeholder player marker that moves one tile per key press and is blocked by the collision layer.
 
-Maps are made in [Tiled](https://www.mapeditor.org/) and live in `src/MythByte.Client/Content/Maps` (tilesets in `Content/Tilesets`). Maps are saved as Tiled JSON (`.tmj`, tilesets `.tsj`). The game server copies the same `.tmj` and `.tsj` files to its output.
+Maps are made in [Tiled](https://www.mapeditor.org/) and live in `src/MythByte.Client/Content/Maps` (tilesets in `Content/Tilesets`, grouped in subfolders per area and theme, for example `Tilesets/Outdoor/Snow`). Maps are saved as Tiled JSON (`.tmj`, tilesets `.tsj`). The game server copies the same `.tmj` and `.tsj` files to its output. Tiles bigger than the 64 x 64 grid (trees, logs) are drawn at full size, anchored at the bottom-left of their cell like in Tiled.
+
+Maps remember the `name` of every tile they use (map property `tileNames:<tileset>`), so reordering a tileset does not break them. After saving a map in Tiled, run `dotnet run --project tools/MythByte.MapTool -- sync-names src/MythByte.Client/Content/Maps`; add `--rewrite-ids` after a tileset was reordered to store the new tile ids.
 
 ## Team and access
 
